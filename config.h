@@ -1,0 +1,10 @@
+#undef TAPPING_TERM
+#define TAPPING_TERM 150
+#define COMBO_TERM 100
+#define FORCE_NKRO
+#undef RGBLIGHT_ANIMATIONS
+//#define PERMISSIVE_HOLD
+#define COMBO_COUNT 2
+
+/* #undef DEBOUNCE */
+/* #define DEBOUNCE 4 */
