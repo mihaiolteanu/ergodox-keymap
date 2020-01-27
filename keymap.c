@@ -38,6 +38,8 @@ enum layer_codes {
 
 enum custom_keycodes {
   EPRM = SAFE_RANGE,
+  SHRINK_WINDOW,                /* Emacs, shrink-window-horizontally */
+  ENLARGE_WINDOW,               /* Emacs, enlarge-window-horizontally */
   VRSN,
   RGB_SLD,
   EMACS_TO_BASE,
@@ -64,32 +66,39 @@ enum tap_dances {
 
 enum combo_events {
     STUMP_EXEC,
-    STUMP_TOGGLE,               
+    STUMP_TOGGLE,
+    COMBO_SEND_ESC,
 };
 
-const uint16_t PROGMEM stump_exec_combo[]   = {KC_BSPC, KC_TAB, COMBO_END};
-const uint16_t PROGMEM stump_toggle_combo[] = {KC_E, KC_I, COMBO_END};
+const uint16_t PROGMEM stump_exec_combo[]     = {KC_LEFT, KC_RIGHT, COMBO_END};
+const uint16_t PROGMEM stump_toggle_combo[]   = {KC_UP,   KC_DOWN,  COMBO_END};
+const uint16_t PROGMEM combo_send_esc_combo[] = {KC_BSPC, KC_TAB,   COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
     [STUMP_EXEC] = COMBO_ACTION(stump_exec_combo),
-    [STUMP_TOGGLE] = COMBO_ACTION(stump_toggle_combo),    
+    [STUMP_TOGGLE] = COMBO_ACTION(stump_toggle_combo),
+    [COMBO_SEND_ESC] = COMBO_ACTION(combo_send_esc_combo),
 };
 
 void process_combo_event(uint8_t combo_index, bool pressed) {
   switch(combo_index) {
-    case STUMP_EXEC:
+  case STUMP_EXEC:
       if (pressed) {
           SEND_STRING(SS_LCTRL("t") SS_LSFT("!"));
         /* tap_code16(LCTL(KC_C)); */
       }
       break;
-      {
-    case STUMP_TOGGLE:
+  case COMBO_SEND_ESC:
+      if (pressed) {
+          SEND_STRING(SS_TAP(X_ESC));
+      }
+      break;
+
+  case STUMP_TOGGLE:
       if (pressed) {
           SEND_STRING(SS_LCTRL("t") SS_LCTRL("t"));
       }
       break;
-  }
   }
 }
 
@@ -110,27 +119,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [BASE] = LAYOUT_ergodox(
   LCTL(KC_F1),   KC_VOLD, KC_VOLU, __x__,       __x__,         KC_F6, RESET,
   __x__,         __x__,   KC_W,    KC_E,        KC_R,          KC_T,  __x__,
-  OSM(MOD_LSFT), KC_A,    KC_S,    ALT_T(KC_D), CTL_T(KC_F),   KC_G,
-  __x__,         KC_Z,    KC_X,    KC_C,        LT(EVC, KC_V), KC_B,  __x__,
-  __x__,         __x__,   __x__,   __x__,       __x__,
-                                                             A(KC_X), __x__,
-                                                                     KC_ESC,
-                                 TD(TD_EMACS), LT(XWINDOW, KC_SPC), KC_BSPC,
+  __x__, KC_A,   KC_S,    WIN_T(KC_D), ALT_T(KC_F),   KC_G,
+  OSM(MOD_LSFT), KC_Z,    KC_X,    KC_C,        LT(EVC, KC_V), KC_B,  __x__,
+  TG(EMACS),     __x__,   __x__,   __x__,      __x__,
+                                                               __x__,  __x__,
+                                                                       __x__,
+                                 LT(XWINDOW, KC_BSPC), CTL_T(KC_SPC), KC_TAB,
 
   __x__, __x__,  __x__,       __x__,       __x__,       __x__,  __x__,
   __x__, KC_Y,   KC_U,        KC_I,        KC_O,        __x__,  __x__,
-         LT(EHELP, KC_H),   CTL_T(KC_J), ALT_T(KC_K),   KC_L, KC_P,   OSM(MOD_RSFT),
-  __x__, KC_N,   KC_M,        KC_COMMA,    KC_DOT,      KC_Q,   TG(MDIA),
-                 KC_TAB,      __x__,       __x__,       __x__,  __x__,
-  __x__,  C(KC_Z),
+  LT(EHELP, KC_H), ALT_T(KC_J), WIN_T(KC_K), KC_L, KC_P, TG(MDIA),
+  __x__, KC_N,   KC_M,        KC_COMMA,    KC_DOT,      KC_Q,   OSM(MOD_RSFT),
+                 __x__,      __x__,       __x__,       __x__,  __x__,
+  __x__, __x__,
   __x__,
-  KC_TAB, KC_ENT, TD(TD_SYMBOLS)),
- 
+  LT(MDIA, KC_ESC), CTL_T(KC_ENT), TD(TD_SYMBOLS)),
+
 
 [XWINDOW] = LAYOUT_ergodox(
   _____, _____, _____,  _____, _____, _____, _____,
   _____, _____, _____,  _____, _____, _____, _____,
-  _____, _____, KC_F5,  KC_F4, KC_F3, _____, 
+  _____, _____, KC_F5,  KC_F3, KC_F4, _____, 
   _____, _____, _____,  _____, _____, _____, _____,
   _____, _____, _____,  _____, _____,
                                       _____, _____,
@@ -158,14 +167,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                           _____,
                             EMACS_TO_BASE, LCA(KC_SPACE), _____,
   
-  _____, _____,  _____,   _____,          _____,        _____,          _____,
+  _____, _____,  ENLARGE_WINDOW,   _____, SHRINK_WINDOW,  _____,          _____,
   _____, _____,  C(KC_Y), C(KC_W),        _____,        _____,          _____,
          KC_DEL, C(KC_D), A(KC_D),        G(KC_K),      C(KC_K),        _____,  
   _____, _____,  _____,   LCTL(KC_COMMA), LCTL(KC_DOT), LCTL(KC_SLASH), _____,
                  _____,    _____,         _____,        _____,          _____,
   _____, _____,
   _____,
-  _____, LCA(KC_SPACE), KC_RGUI
+  _____, LCA(KC_SPACE), TO(BASE)
 ),
 
    
@@ -216,10 +225,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _____, _____,   KC_WH_L, KC_MS_U, KC_WH_U, _____, _____,
   _____, _____,   KC_MS_L, KC_MS_D, KC_MS_R, _____,
   _____, _____,   _____,   _____,   KC_WH_D, _____, _____,
-  _____, _____,   _____,   KC_BTN1, KC_BTN2,
-                                             _____, _____,
+  _____, _____,   _____,   _____,   _____,
+                                           RGB_TOG, _____,
                                                     _____,
-                                  KC_BTN2, KC_BTN1, _____,
+                                  KC_BTN2, KC_BTN1, KC_BTN3,
   
   RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW, RGB_M_SN, RGB_M_K, _____,
   _____,   RGB_HUI, RGB_SAI, RGB_VAI,  RGB_M_K,  RGB_M_X, _____,
@@ -228,7 +237,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                     KC_VOLU, KC_VOLD,  KC_MUTE,  _____,   _____,
   _____, _____,
   _____,
-  RGB_TOG, _____, _____),
+  _____, _____, _____),
 
 LAYOUT(EHELP),
 LAYOUT(EVC),
@@ -393,6 +402,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case EPRM:
             eeconfig_init();
             return false;
+        case SHRINK_WINDOW:
+            SEND_STRING(SS_LCTRL("x") "{");
+            return false;
+        case ENLARGE_WINDOW:
+            SEND_STRING(SS_LCTRL("x") "}");
+            return false;            
         case VRSN:
             SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
             return false;
