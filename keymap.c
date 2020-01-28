@@ -4,64 +4,22 @@
 #define _____ KC_TRNS
 #define __x__ KC_NO
 
-/* A blank layout. Used to simulate key holds. */
-#define LAYOUT(name) [name] = LAYOUT_ergodox(\
-  _____, _____, _____, _____, _____, _____, _____,\
-  _____, _____, _____, _____, _____, _____, _____,\
-  _____, _____, _____, _____, _____, _____,\
-  _____, _____, _____, _____, _____, _____, _____,\
-  _____, _____, _____, _____, _____,\
-                                     _____, _____,\
-                                            _____,\
-                              _____, _____, _____,\
-  _____, _____, _____, _____, _____, _____, _____,\
-  _____, _____, _____, _____, _____, _____, _____,\
-         _____, _____, _____, _____, _____, _____,\
-  _____, _____, _____, _____, _____, _____, _____,\
-                _____, _____, _____, _____, _____,\
-  _____, _____,\
-  _____,\
-  _____, _____, _____)
-
 enum layer_codes {
       BASE = 0,                 /* Default layer */
       XWINDOW,
       EMACS,
+      EMACS2,
+      NUMERIC,
       SYMBOLS,
-      SYMBOLS_2,
-      MDIA,
-      EHELP,                    /* Emacs Help */
-      EVC,                      /* Emacs Version Control */
-      EX,                       /* Emacs C-x */
+      SYMBOLS2,
+      MDIA,      
       BLANK
 };
 
 enum custom_keycodes {
   EPRM = SAFE_RANGE,
   SHRINK_WINDOW,                /* Emacs, shrink-window-horizontally */
-  ENLARGE_WINDOW,               /* Emacs, enlarge-window-horizontally */
-  VRSN,
-  RGB_SLD,
-  EMACS_TO_BASE,
-};
-
-typedef struct {
-  bool is_press_action;
-  int state;
-} tap;
-
-enum {
-  SINGLE_TAP = 1,
-  SINGLE_HOLD = 2,
-  DOUBLE_TAP = 3,
-  DOUBLE_HOLD = 4,
-  TRIPLE_TAP = 5,
-  TRIPLE_HOLD = 6
-};
-
-enum tap_dances {
-    TD_SYMBOLS,
-    TD_EMACS
+  ENLARGE_WINDOW,               /* Emacs, enlarge-window-horizontally */      
 };
 
 enum combo_events {
@@ -102,44 +60,33 @@ void process_combo_event(uint8_t combo_index, bool pressed) {
   }
 }
 
-int  cur_dance    (qk_tap_dance_state_t *state);
-
-void symbols_finished (qk_tap_dance_state_t *state, void *user_data);
-void symbols_reset    (qk_tap_dance_state_t *state, void *user_data);
-void movement_finished (qk_tap_dance_state_t *state, void *user_data);
-void movement_reset    (qk_tap_dance_state_t *state, void *user_data);
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [TD_SYMBOLS]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, symbols_finished, symbols_reset),
-  [TD_EMACS]    = ACTION_TAP_DANCE_FN_ADVANCED(NULL, movement_finished, movement_reset),
-};
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-/* Keymap 0: Basic layer */
+                                                              
 [BASE] = LAYOUT_ergodox(
-  LCTL(KC_F1),   KC_VOLD, KC_VOLU, __x__,       __x__,         KC_F6, RESET,
-  __x__,         __x__,   KC_W,    KC_E,        KC_R,          KC_T,  __x__,
-  __x__, KC_A,   KC_S,    WIN_T(KC_D), ALT_T(KC_F),   KC_G,
-  OSM(MOD_LSFT), KC_Z,    KC_X,    KC_C,        LT(EVC, KC_V), KC_B,  __x__,
-  TG(EMACS),     __x__,   __x__,   __x__,      __x__,
-                                                               __x__,  __x__,
-                                                                       __x__,
-                                 LT(XWINDOW, KC_BSPC), CTL_T(KC_SPC), KC_TAB,
+  LCTL(KC_F1),   KC_VOLD, KC_VOLU,        __x__,       __x__,         KC_F6, RESET,
+  __x__,         __x__,   KC_W,           KC_E,        KC_R,          KC_T,  __x__,
+  __x__,         KC_A,    WIN_T(KC_S),    ALT_T(KC_D), CTL_T(KC_F),   KC_G,
+  OSM(MOD_LSFT), KC_Z,    KC_X,    KC_C,  KC_V, KC_B,  __x__,
+  TG(EMACS),     __x__,   __x__,   __x__, __x__,
+                                                                     __x__,  __x__,
+                                                                             __x__,
+                                       LT(XWINDOW, KC_BSPC), CTL_T(KC_SPC), KC_TAB,
 
-  __x__, __x__,  __x__,       __x__,       __x__,       __x__,  __x__,
-  __x__, KC_Y,   KC_U,        KC_I,        KC_O,        __x__,  __x__,
-  LT(EHELP, KC_H), ALT_T(KC_J), WIN_T(KC_K), KC_L, KC_P, TG(MDIA),
-  __x__, KC_N,   KC_M,        KC_COMMA,    KC_DOT,      KC_Q,   OSM(MOD_RSFT),
-                 __x__,      __x__,       __x__,       __x__,  __x__,
+  __x__, __x__,       __x__,             __x__,             __x__,          __x__,  __x__,
+  __x__, KC_Y,        LT(SYMBOLS, KC_U), LT(NUMERIC, KC_I), KC_O,           __x__,  __x__,
+  KC_H,  CTL_T(KC_J), ALT_T(KC_K),       WIN_T(KC_L),       KC_P, TG(MDIA),
+  __x__, KC_N,        KC_M,              KC_COMMA,          KC_DOT,         KC_Q,   OSM(MOD_RSFT),
+                      __x__,             __x__,             __x__,          __x__,  __x__,
   __x__, __x__,
   __x__,
-  LT(MDIA, KC_ESC), CTL_T(KC_ENT), TD(TD_SYMBOLS)),
+  LT(MDIA, KC_ESC), LT(EMACS, KC_ENT), __x__),
+
 
 
 [XWINDOW] = LAYOUT_ergodox(
   _____, _____, _____,  _____, _____, _____, _____,
   _____, _____, _____,  _____, _____, _____, _____,
-  _____, _____, KC_F5,  KC_F3, KC_F4, _____, 
+  _____, _____, _____,  _____, _____, _____, 
   _____, _____, _____,  _____, _____, _____, _____,
   _____, _____, _____,  _____, _____,
                                       _____, _____,
@@ -148,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                       
   _____, _____, _____, _____, _____, _____, _____,
   _____, _____, _____, _____, _____, _____, _____,
-         _____, _____, _____, _____, _____, _____,
+         _____, KC_F5, KC_F3, KC_F4, _____, _____,
   _____, _____, _____, _____, _____, _____, _____,
                 _____, _____, _____, _____, _____,
   _____, _____,
@@ -157,31 +104,54 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 
+
 [EMACS] = LAYOUT_ergodox(
-  _____, _____,   _____,     _____,   _____,     _____,   _____,
-  _____, _____,   LCA(KC_B), C(KC_P), LCA(KC_F), A(KC_V), _____,
-  _____, C(KC_A), C(KC_B),   C(KC_N), C(KC_F),   C(KC_E),
-  _____, _____,   _____,     _____,    _____,    C(KC_V), _____,
-  _____, _____,   _____,     _____,    _____,
+  _____, _____,   _____,   _____,   _____,   _____,   _____,
+  _____, _____,   _____,   C(KC_P), A(KC_V), _____,   _____,
+  _____, C(KC_A), C(KC_B), C(KC_N), C(KC_F), C(KC_E),
+  _____, _____,   _____,   _____,   C(KC_V), _____,   _____,
+  _____, _____,   _____,   _____,   _____,
                                                    _____, _____,
                                                           _____,
-                            EMACS_TO_BASE, LCA(KC_SPACE), _____,
+                             C(S(KC_SPC)), LCA(KC_SPACE), _____,
   
-  _____, _____,  ENLARGE_WINDOW,   _____, SHRINK_WINDOW,  _____,          _____,
-  _____, _____,  C(KC_Y), C(KC_W),        _____,        _____,          _____,
-         KC_DEL, C(KC_D), A(KC_D),        G(KC_K),      C(KC_K),        _____,  
-  _____, _____,  _____,   LCTL(KC_COMMA), LCTL(KC_DOT), LCTL(KC_SLASH), _____,
-                 _____,    _____,         _____,        _____,          _____,
+  _____, _____,  ENLARGE_WINDOW, _____, SHRINK_WINDOW, _____, _____,
+  _____, _____,  _____,          _____, _____,         _____, _____,
+         _____,  _____,          _____, _____,         _____, _____,  
+  _____, _____,  _____,          _____, _____,         _____, _____,
+                 _____,          _____, _____,         _____, _____,
   _____, _____,
   _____,
-  _____, LCA(KC_SPACE), TO(BASE)
+  _____, _____, _____),
+
+
+
+[EMACS2] = LAYOUT_ergodox(
+  _____, _____, _____,   _____,   _____,   _____, _____,
+  _____, _____, _____,   A(KC_P), _____,   _____, _____,
+  _____, _____, A(KC_B), A(KC_N), A(KC_F), _____, 
+  _____, _____, _____,   _____,   _____,   _____, _____,
+  _____, _____, _____,   _____,   _____,
+                                           _____, _____,
+                                                  _____,
+                                    _____, _____, _____,
+                                      
+  _____, _____, _____, _____, _____, _____, _____,
+  _____, _____, _____, _____, _____, _____, _____,
+         _____, _____, _____, _____, _____, _____,
+  _____, _____, _____, _____, _____, _____, _____,
+                _____, _____, _____, _____, _____,
+  _____, _____,
+  _____,
+  _____, _____, _____
 ),
 
+
    
-[SYMBOLS] = LAYOUT_ergodox(
+[NUMERIC] = LAYOUT_ergodox(
   _____, _____, _____, _____, _____, _____, _____,
   _____, _____, KC_1,  KC_2,  KC_3,  _____, _____,
-  _____, _____, KC_4,  KC_5,  KC_6,  _____,
+  _____, KC_0,  KC_4,  KC_5,  KC_6,  _____,
   _____, KC_0,  KC_7,  KC_8,  KC_9,  _____, _____,
   _____, _____, _____, _____, _____,
                                      _____, _____,
@@ -195,11 +165,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 _____, _____,  _____,  _____, _____,
   _____, _____,
   _____,
-  _____, _____, _____
-),
+  _____, _____, _____),
 
 
-[SYMBOLS_2] = LAYOUT_ergodox(
+
+[SYMBOLS2] = LAYOUT_ergodox(
   _____, _____,               _____,       _____,         _____,         _____,        _____,
   _____, _____,               KC_PIPE,     KC_PLUS,       KC_ASTERISK,   KC_AT,        _____,
   _____, KC_LEFT_CURLY_BRACE, KC_LBRACKET, KC_MINUS,      KC_LEFT_PAREN, KC_AMPERSAND,
@@ -220,6 +190,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 
+
 [MDIA] = LAYOUT_ergodox(
   _____, KC_ACL0, KC_ACL1, KC_ACL2, _____,   _____, _____,
   _____, _____,   KC_WH_L, KC_MS_U, KC_WH_U, _____, _____,
@@ -229,18 +200,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                            RGB_TOG, _____,
                                                     _____,
                                   KC_BTN2, KC_BTN1, KC_BTN3,
-  
-  RGB_M_P, RGB_M_B, RGB_M_R, RGB_M_SW, RGB_M_SN, RGB_M_K, _____,
-  _____,   RGB_HUI, RGB_SAI, RGB_VAI,  RGB_M_K,  RGB_M_X, _____,
-           RGB_HUD, RGB_SAD, RGB_VAD,  RGB_M_G,  RGB_M_T, _____,
-  _____,   _____,   RGB_MOD, RGB_RMOD, _____,    _____,   _____,
-                    KC_VOLU, KC_VOLD,  KC_MUTE,  _____,   _____,
+
+  _____, _____, _____, _____, _____, _____, _____,
+  _____, _____, _____, _____, _____, _____, _____,
+         _____, _____, _____, _____, _____, _____,
+  _____, _____, _____, _____, _____, _____, _____,
+                _____, _____, _____, _____, _____,
   _____, _____,
   _____,
-  _____, _____, _____),
+  _____, _____, _____),  
 
-LAYOUT(EHELP),
-LAYOUT(EVC),
+
 
 /* Used for copy/paste for new layers. */
 [BLANK] = LAYOUT_ergodox(
@@ -260,119 +230,8 @@ LAYOUT(EVC),
                 _____, _____, _____, _____, _____,
   _____, _____,
   _____,
-  _____, _____, _____
-),
-
+  _____, _____, _____),
 };
-
-
-int cur_dance (qk_tap_dance_state_t *state) {
-  if (state->count == 1) {
-    if (state->pressed)
-        return SINGLE_HOLD;
-    else
-        return SINGLE_TAP;
-  }
-  else if (state->count == 2) {
-    if (state->pressed)
-        return DOUBLE_HOLD;
-    else
-        return DOUBLE_TAP;
-  }
-  else if (state->count == 3) {
-    if (state->interrupted || !state->pressed)
-        return TRIPLE_TAP;
-    else
-        return TRIPLE_HOLD;
-  }
-  else return 8;
-}
-
-static tap symbols_tap_state = {
-  .is_press_action = true,
-  .state = 0
-};
-
-void symbols_finished (qk_tap_dance_state_t *state, void *user_data) {
-  symbols_tap_state.state = cur_dance(state);
-  switch (symbols_tap_state.state) {
-    case SINGLE_TAP:
-        set_oneshot_layer(SYMBOLS_2, ONESHOT_START);
-        clear_oneshot_layer_state(ONESHOT_PRESSED);
-        break;
-    case SINGLE_HOLD:
-        /* register_code(KC_RCTRL); */
-        layer_on(SYMBOLS);
-        break;
-    case DOUBLE_TAP:
-        set_oneshot_layer(SYMBOLS_2, ONESHOT_START);
-        set_oneshot_layer(SYMBOLS_2, ONESHOT_PRESSED);
-        break;
-    case DOUBLE_HOLD:
-        register_code(KC_LALT);        
-        break;
-    //Last case is for fast typing. Assuming your key is `f`:
-    //For example, when typing the word `buffer`, and you want to make sure that you send `ff` and not `Esc`.
-    //In order to type `ff` when typing fast, the next character will have to be hit within the `TAPPING_TERM`, which by default is 200ms.
-  }
-}
-
-void symbols_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (symbols_tap_state.state) {
-    case SINGLE_TAP:
-        break;
-    case SINGLE_HOLD:
-        layer_off(SYMBOLS);
-        /* unregister_code(KC_RCTRL); */
-        break;
-    case DOUBLE_TAP:
-        break;
-    case DOUBLE_HOLD:
-        
-        unregister_code(KC_RCTRL);
-        break;
-  }
-  symbols_tap_state.state = 0;
-}
-
-static tap movement_tap_state = {
-  .is_press_action = true,
-  .state = 0
-};
-
-void movement_finished (qk_tap_dance_state_t *state, void *user_data) {
-    movement_tap_state.state = cur_dance(state);
-    switch (movement_tap_state.state) {
-    case SINGLE_TAP:
-        layer_on(EMACS);
-        tap_code16(MEH(KC_M));
-        break;
-    case SINGLE_HOLD:
-        layer_on(EMACS);
-        tap_code16(MEH(KC_M));
-        break;
-    case DOUBLE_TAP:
-        register_code(KC_ESC);
-        break;
-    case DOUBLE_HOLD:
-        break;
-  }
-}
-
-void movement_reset  (qk_tap_dance_state_t *state, void *user_data) {
-    switch (movement_tap_state.state) {
-    case SINGLE_TAP:
-        break;
-    case SINGLE_HOLD:
-        layer_off(EMACS);
-        tap_code16(MEH(KC_I));
-        break;
-    case DOUBLE_TAP:
-        break;
-    case DOUBLE_HOLD:
-        break;
-  }
-}
 
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -395,7 +254,6 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
         switch (keycode) {
@@ -407,20 +265,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case ENLARGE_WINDOW:
             SEND_STRING(SS_LCTRL("x") "}");
-            return false;            
-        case VRSN:
-            SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
-            return false;
-#ifdef RGBLIGHT_ENABLE
-        case RGB_SLD:
-            rgblight_mode(1);
-            return false;
-#endif
-        case EMACS_TO_BASE:
-            layer_off(EMACS);
-            layer_on(BASE);
-            tap_code16(MEH(KC_I));
-            return false;
+            return false;        
         }
     }
     return true;
@@ -440,21 +285,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   ergodox_right_led_2_off();
   ergodox_right_led_3_off();
 
-  uint8_t layer = biton32(state);
+  uint8_t layer = biton32(state);  
   switch (layer) {
-      case EHELP:
-          SEND_STRING(SS_LCTRL("h"));
-          break;
-      case EVC:
-          SEND_STRING(SS_LCTRL("x") "v");
-          break;
-  
-  }
-  switch (layer) {
-      case 0:
-        #ifdef RGBLIGHT_ENABLE
-          rgblight_init();
-        #endif        
+      case 0:        
         break;
       case 1:
         ergodox_right_led_1_on();        
