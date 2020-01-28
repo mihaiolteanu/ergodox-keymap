@@ -10,6 +10,7 @@ enum layer_codes {
       EMACS,
       EMACS2,
       NUMERIC,
+      NUM_UP,                   /* Shifted numeric symbols */
       SYMBOLS,
       SYMBOLS2,
       MDIA,      
@@ -72,11 +73,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                              __x__,
                                        LT(XWINDOW, KC_BSPC), CTL_T(KC_SPC), KC_TAB,
 
-  __x__, __x__,       __x__,             __x__,             __x__,          __x__,  __x__,
-  __x__, KC_Y,        LT(SYMBOLS, KC_U), LT(NUMERIC, KC_I), KC_O,           __x__,  __x__,
-  KC_H,  CTL_T(KC_J), ALT_T(KC_K),       WIN_T(KC_L),       KC_P, TG(MDIA),
-  __x__, KC_N,        KC_M,              KC_COMMA,          KC_DOT,         KC_Q,   OSM(MOD_RSFT),
-                      __x__,             __x__,             __x__,          __x__,  __x__,
+  __x__, __x__,            __x__,             __x__,             __x__,          __x__,  __x__,
+  __x__, LT(NUM_UP, KC_Y), LT(NUMERIC, KC_U), LT(SYMBOLS, KC_I), KC_O,           __x__,  __x__,
+  KC_H,  CTL_T(KC_J),      ALT_T(KC_K),       WIN_T(KC_L),       KC_P, TG(MDIA),
+  __x__, KC_N,             KC_M,              KC_COMMA,          KC_DOT,         KC_Q,   OSM(MOD_RSFT),
+                           __x__,             __x__,             __x__,          __x__,  __x__,
   __x__, __x__,
   __x__,
   LT(MDIA, KC_ESC), LT(EMACS, KC_ENT), __x__),
@@ -95,7 +96,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                       
   _____, _____, _____, _____, _____, _____, _____,
   _____, _____, _____, _____, _____, _____, _____,
-         _____, KC_F5, KC_F3, KC_F4, _____, _____,
+         _____, KC_F4, KC_F3, KC_F5, _____, _____,
   _____, _____, _____, _____, _____, _____, _____,
                 _____, _____, _____, _____, _____,
   _____, _____,
@@ -169,21 +170,63 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 
-[SYMBOLS2] = LAYOUT_ergodox(
-  _____, _____,               _____,       _____,         _____,         _____,        _____,
-  _____, _____,               KC_PIPE,     KC_PLUS,       KC_ASTERISK,   KC_AT,        _____,
-  _____, KC_LEFT_CURLY_BRACE, KC_LBRACKET, KC_MINUS,      KC_LEFT_PAREN, KC_AMPERSAND,
-  _____, _____,               _____,       KC_UNDERSCORE, KC_EQUAL,      KC_TILDE,     _____,
-  _____, _____,               _____,       _____,         _____,
-                                                                                _____, _____,
-                                                                                       _____,
-                                                              KC_QUESTION, KC_EXCLAIM, _____,
+[NUM_UP] = LAYOUT_ergodox(
+  _____, _____,       _____,        _____,       _____,         _____, _____,
+  _____, _____,       KC_EXCLAIM,   KC_AT,       KC_HASH,       _____, _____,
+  _____, KC_QUESTION, KC_DOLLAR,    KC_PERCENT,  KC_CIRCUMFLEX, _____,
+  _____, _____,       KC_AMPERSAND, KC_ASTERISK, _____,         _____, _____,
+  _____, _____,       _____,        _____,       _____,
+                                                                _____, _____,
+                                                                       _____,
+                                                         _____, _____, _____,
                                       
-  _____, _____,         _____,           _____,                 _____,                  _____,     _____,
-  _____, KC_CIRCUMFLEX, KC_COLON,        KC_SCOLON,             _____,                  _____,     _____,
-         KC_HASH,       KC_DOUBLE_QUOTE, KC_QUOTE,              KC_GRAVE,               _____,     _____,
-  _____, KC_PERCENT,    KC_SLASH,        KC_LEFT_ANGLE_BRACKET, KC_RIGHT_ANGLE_BRACKET, KC_BSLASH, _____,
-                        _____,           _____,                  _____,                 _____,     _____,
+  _____, _____, _____, _____,  _____,  _____, _____,
+  _____, _____, _____, _____,  _____,  _____, _____,
+         _____, _____, _____,  _____,  _____, _____,
+  _____, _____, _____, _____,  _____,  _____, _____,
+                _____, _____,  _____,  _____, _____,
+  _____, _____,
+  _____,
+  _____, _____, _____),
+
+
+
+[SYMBOLS] = LAYOUT_ergodox(
+  _____, _____, KC_LBRC, KC_RBRC,  KC_LCBR,  KC_RCBR,  _____,
+  _____, _____, _____,   KC_DQUO,  KC_LPRN,  KC_RPRN,  _____,
+  _____, _____, _____,   KC_QUOTE, KC_MINUS, KC_GRAVE, 
+  _____, _____, _____,   KC_EQUAL, KC_PLUS,  KC_UNDS,  _____,
+  _____, _____, _____,   KC_LABK,  KC_RABK,
+                                             _____, _____,
+                                                    _____,
+                                      _____, _____, _____,
+                                      
+  _____, _____, _____, _____, _____, _____, _____,
+  _____, _____, _____, _____, _____, _____, _____,
+         _____, _____, _____, _____, _____, _____,
+  _____, _____, _____, _____, _____, _____, _____,
+                _____, _____, _____, _____, _____,
+  _____, _____,
+  _____,
+  _____, _____, _____),
+
+
+
+[SYMBOLS2] = LAYOUT_ergodox(
+  _____, _____, _____,   _____, _____, _____,    _____,
+  _____, _____, KC_PIPE, _____, _____, _____,    _____,
+  _____, _____, _____,   _____, _____, _____,
+  _____, _____, _____,   _____, _____, KC_TILDE, _____,
+  _____, _____, _____,   _____,        _____,
+                                          _____, _____,
+                                                 _____,
+                                   _____, _____, _____,
+                                      
+  _____, _____, _____,    _____,     _____, _____,     _____,
+  _____, _____, KC_COLON, KC_SCOLON, _____, _____,     _____,
+         _____, _____,    _____,     _____, _____,     _____,
+  _____, _____, KC_SLASH, _____,     _____, KC_BSLASH, _____,
+                _____,    _____,     _____, _____,     _____,
   _____, _____,
   _____,
   _____, _____, _____
