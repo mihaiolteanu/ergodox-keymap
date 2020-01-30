@@ -4,7 +4,7 @@
 #define FORCE_NKRO
 #undef RGBLIGHT_ANIMATIONS
 //#define PERMISSIVE_HOLD
-#define COMBO_COUNT 2
+#define COMBO_COUNT 3
 
 /* #undef DEBOUNCE */
 /* #define DEBOUNCE 4 */

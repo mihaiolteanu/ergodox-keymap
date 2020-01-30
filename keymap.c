@@ -7,20 +7,22 @@
 enum layer_codes {
       BASE = 0,                 /* Default layer */
       XWINDOW,
-      EMACS,
-      EMACS2,
+      EMACS_L,
+      EMACS_R,
       NUMERIC,
       NUM_UP,                   /* Shifted numeric symbols */
-      SYMBOLS,
-      SYMBOLS2,
+      SYMBOLS,      
       MDIA,      
       BLANK
 };
 
 enum custom_keycodes {
   EPRM = SAFE_RANGE,
-  SHRINK_WINDOW,                /* Emacs, shrink-window-horizontally */
-  ENLARGE_WINDOW,               /* Emacs, enlarge-window-horizontally */      
+  EM_WIN_S,                /* Emacs, shrink-window-horizontally */
+  EM_WIN_L,                /* Emacs, enlarge-window-horizontally */
+  EM_SPLIT,                /* Emacs, split-window-right */
+  EM_UNSPLIT,              /* Emacs, delete-window */
+  EM_KILL,                 /* Emacs, kill-buffer */
 };
 
 enum combo_events {
@@ -64,14 +66,14 @@ void process_combo_event(uint8_t combo_index, bool pressed) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                               
 [BASE] = LAYOUT_ergodox(
-  LCTL(KC_F1),   KC_VOLD, KC_VOLU,        __x__,       __x__,         KC_F6, RESET,
-  __x__,         __x__,   KC_W,           KC_E,        KC_R,          KC_T,  __x__,
-  __x__,         KC_A,    WIN_T(KC_S),    ALT_T(KC_D), CTL_T(KC_F),   KC_G,
-  OSM(MOD_LSFT), KC_Z,    KC_X,    KC_C,  KC_V, KC_B,  __x__,
-  TG(EMACS),     __x__,   __x__,   __x__, __x__,
+  LCTL(KC_F1),   KC_VOLD, KC_VOLU,        __x__,       __x__,       KC_F6, RESET,
+  __x__,         __x__,   KC_W,           KC_E,        KC_R,        KC_T,  __x__,
+  __x__,         KC_A,    WIN_T(KC_S),    ALT_T(KC_D), CTL_T(KC_F), KC_G,
+  OSM(MOD_LSFT), KC_Z,    KC_X,           KC_C,        KC_V,        KC_B,  __x__,
+  TG(EMACS_L),   __x__,   __x__,          __x__,       __x__,
                                                                      __x__,  __x__,
                                                                              __x__,
-                                       LT(XWINDOW, KC_BSPC), CTL_T(KC_SPC), KC_TAB,
+                                 LT(XWINDOW, KC_BSPC), LT(EMACS_R, KC_SPC), KC_TAB,
 
   __x__, __x__,            __x__,             __x__,             __x__,          __x__,  __x__,
   __x__, LT(NUM_UP, KC_Y), LT(NUMERIC, KC_U), LT(SYMBOLS, KC_I), KC_O,           __x__,  __x__,
@@ -80,7 +82,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                            __x__,             __x__,             __x__,          __x__,  __x__,
   __x__, __x__,
   __x__,
-  LT(MDIA, KC_ESC), LT(EMACS, KC_ENT), __x__),
+  LT(MDIA, KC_ESC), LT(EMACS_L, KC_ENT), __x__),
 
 
 
@@ -94,11 +96,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                              _____,
                                _____, _____, _____,
                                       
-  _____, _____, _____, _____, _____, _____, _____,
-  _____, _____, _____, _____, _____, _____, _____,
-         _____, KC_F4, KC_F3, KC_F5, _____, _____,
-  _____, _____, _____, _____, _____, _____, _____,
-                _____, _____, _____, _____, _____,
+  _____, _____, _____, _____, _____,   _____, _____,
+  _____, _____, _____, _____, _____,   _____, _____,
+         _____, KC_F4, KC_F3, G(KC_T), KC_F5, _____,
+  _____, _____, _____, _____, _____,   _____, _____,
+                _____, _____, _____,   _____, _____,
   _____, _____,
   _____,
   _____, KC_F1, KC_F2
@@ -106,42 +108,42 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 
-[EMACS] = LAYOUT_ergodox(
-  _____, _____,   _____,   _____,   _____,   _____,   _____,
-  _____, _____,   _____,   C(KC_P), A(KC_V), _____,   _____,
-  _____, C(KC_A), C(KC_B), C(KC_N), C(KC_F), C(KC_E),
-  _____, _____,   _____,   _____,   C(KC_V), _____,   _____,
-  _____, _____,   _____,   _____,   _____,
-                                                   _____, _____,
-                                                          _____,
-                             C(S(KC_SPC)), LCA(KC_SPACE), _____,
+[EMACS_L] = LAYOUT_ergodox(
+  _____, _____,       EM_WIN_L, EM_SPLIT, EM_WIN_S, _____,   _____,
+  _____, _____,       _____,    C(KC_P),  _____,    _____,   _____,
+  _____, C(KC_A),     C(KC_B),  C(KC_N),  C(KC_F),  C(KC_E),
+  _____, C(KC_SLASH), EM_KILL,  _____,    _____,    _____,   _____,
+  _____, _____,       _____,    _____,    _____,
+                                                      _____, _____,
+                                                             _____,
+                            C(S(KC_SPC)), C(KC_TAB), LCA(KC_SPACE),
   
-  _____, _____,  ENLARGE_WINDOW, _____, SHRINK_WINDOW, _____, _____,
-  _____, _____,  _____,          _____, _____,         _____, _____,
-         _____,  _____,          _____, _____,         _____, _____,  
-  _____, _____,  _____,          _____, _____,         _____, _____,
-                 _____,          _____, _____,         _____, _____,
+  _____, _____, _____, _____, _____, _____, _____,
+  _____, _____, _____, _____, _____, _____, _____,
+         _____, _____, _____, _____, _____, _____,  
+  _____, _____, _____, _____, _____, _____, _____,
+                _____, _____, _____, _____, _____,
   _____, _____,
   _____,
   _____, _____, _____),
 
 
 
-[EMACS2] = LAYOUT_ergodox(
+[EMACS_R] = LAYOUT_ergodox(
   _____, _____, _____,   _____,   _____,   _____, _____,
-  _____, _____, _____,   A(KC_P), _____,   _____, _____,
-  _____, _____, A(KC_B), A(KC_N), A(KC_F), _____, 
+  _____, _____, _____,   _____,   _____,   _____, _____,
+  _____, _____, _____,   _____,   _____,   _____,
   _____, _____, _____,   _____,   _____,   _____, _____,
   _____, _____, _____,   _____,   _____,
                                            _____, _____,
                                                   _____,
                                     _____, _____, _____,
                                       
-  _____, _____, _____, _____, _____, _____, _____,
-  _____, _____, _____, _____, _____, _____, _____,
-         _____, _____, _____, _____, _____, _____,
-  _____, _____, _____, _____, _____, _____, _____,
-                _____, _____, _____, _____, _____,
+  _____, _____, _____, EM_UNSPLIT, _____, _____, _____,
+  _____, _____, _____, _____,      _____, _____, _____,
+         _____, _____, _____,      _____, _____, _____,
+  _____, _____, _____, _____,      _____, _____, _____,
+                _____, _____,      _____, _____, _____,
   _____, _____,
   _____,
   _____, _____, _____
@@ -174,7 +176,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _____, _____,       _____,        _____,       _____,         _____, _____,
   _____, _____,       KC_EXCLAIM,   KC_AT,       KC_HASH,       _____, _____,
   _____, KC_QUESTION, KC_DOLLAR,    KC_PERCENT,  KC_CIRCUMFLEX, _____,
-  _____, _____,       KC_AMPERSAND, KC_ASTERISK, _____,         _____, _____,
+  _____, KC_QUESTION, KC_AMPERSAND, KC_ASTERISK, _____,         _____, _____,
   _____, _____,       _____,        _____,       _____,
                                                                 _____, _____,
                                                                        _____,
@@ -192,11 +194,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 [SYMBOLS] = LAYOUT_ergodox(
-  _____, _____, KC_LBRC, KC_RBRC,  KC_LCBR,  KC_RCBR,  _____,
-  _____, _____, _____,   KC_DQUO,  KC_LPRN,  KC_RPRN,  _____,
-  _____, _____, _____,   KC_QUOTE, KC_MINUS, KC_GRAVE, 
-  _____, _____, _____,   KC_EQUAL, KC_PLUS,  KC_UNDS,  _____,
-  _____, _____, _____,   KC_LABK,  KC_RABK,
+  _____, _____,     KC_LBRC,   KC_RBRC,  KC_LCBR,  KC_RCBR,  _____,
+  _____, KC_TILDE,  _____,     KC_DQUO,  KC_MINUS, KC_RPRN,  _____,
+  _____, KC_SCOLON, KC_COLON,  KC_QUOTE, KC_LPRN,  KC_GRAVE, 
+  _____, KC_SLASH,  KC_BSLASH, KC_EQUAL, KC_PLUS,  KC_UNDS,  _____,
+  _____, _____,     KC_PIPE,   KC_LABK,  KC_RABK,
                                              _____, _____,
                                                     _____,
                                       _____, _____, _____,
@@ -209,28 +211,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _____, _____,
   _____,
   _____, _____, _____),
-
-
-
-[SYMBOLS2] = LAYOUT_ergodox(
-  _____, _____, _____,   _____, _____, _____,    _____,
-  _____, _____, KC_PIPE, _____, _____, _____,    _____,
-  _____, _____, _____,   _____, _____, _____,
-  _____, _____, _____,   _____, _____, KC_TILDE, _____,
-  _____, _____, _____,   _____,        _____,
-                                          _____, _____,
-                                                 _____,
-                                   _____, _____, _____,
-                                      
-  _____, _____, _____,    _____,     _____, _____,     _____,
-  _____, _____, KC_COLON, KC_SCOLON, _____, _____,     _____,
-         _____, _____,    _____,     _____, _____,     _____,
-  _____, _____, KC_SLASH, _____,     _____, KC_BSLASH, _____,
-                _____,    _____,     _____, _____,     _____,
-  _____, _____,
-  _____,
-  _____, _____, _____
-),
 
 
 
@@ -303,11 +283,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case EPRM:
             eeconfig_init();
             return false;
-        case SHRINK_WINDOW:
+        case EM_WIN_S:
             SEND_STRING(SS_LCTRL("x") "{");
             return false;
-        case ENLARGE_WINDOW:
+        case EM_WIN_L:
             SEND_STRING(SS_LCTRL("x") "}");
+            return false;        
+        case EM_SPLIT:
+            SEND_STRING(SS_LCTRL("x") "3");
+            return false;        
+        case EM_UNSPLIT:
+            SEND_STRING(SS_LCTRL("x") "0");
+            return false;        
+        case EM_KILL:
+            SEND_STRING(SS_LCTRL("x") "k");
             return false;        
         }
     }
@@ -332,32 +321,15 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   switch (layer) {
       case 0:        
         break;
-      case 1:
+      case EMACS_L:
         ergodox_right_led_1_on();        
         break;
-      case 2:
+      case MDIA:
         ergodox_right_led_2_on();        
         break;
-      case 3:
+      case XWINDOW:
         ergodox_right_led_3_on();        
-        break;
-      case 4:
-        ergodox_right_led_1_on();
-        ergodox_right_led_2_on();        
-        break;
-      case 5:
-        ergodox_right_led_1_on();
-        ergodox_right_led_3_on();        
-        break;
-      case 6:
-        ergodox_right_led_2_on();
-        ergodox_right_led_3_on();        
-        break;
-      case 7:
-        ergodox_right_led_1_on();
-        ergodox_right_led_2_on();
-        ergodox_right_led_3_on();        
-        break;
+        break;      
       default:
         break;
   }
